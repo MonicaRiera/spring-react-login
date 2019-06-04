@@ -1,5 +1,6 @@
 import React from 'react';
 import NoteList from './NoteList'
+import axios from 'axios';
 
 class LoginForm extends React.Component {
 
@@ -24,12 +25,27 @@ class LoginForm extends React.Component {
             return currentState;
         });
 
+
     }
 
     login() {
+        console.log("inside login");
         console.log(this.state.user.email);
         console.log(this.state.user.password);
         this.props.onLogin(this.state.user);
+
+        const promise = axios.post("/api/user/login", this.state.user);
+
+        promise.then(response => {
+            //console.log(response.data);
+            this.state.user = response.data;
+
+            if (this.state.user == null) {
+                console.log("Unauthorised");
+            } else {
+                console.log("Correct credentials");
+            }
+        });
     }
 
     render() {
